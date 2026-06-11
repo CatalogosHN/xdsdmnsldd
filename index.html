@@ -6,40 +6,42 @@
   <title>Lista de Pagos</title>
 
   <style>
-    :root {
+    :root{
       --bg:#f4f7fb;
       --card:#fff;
       --text:#172033;
       --muted:#667085;
       --line:#d8e1ee;
       --blue:#0078ff;
+      --blue-dark:#005fcc;
       --green:#149c52;
       --yellow:#b56b00;
       --red:#d92d20;
       --green-bg:#e9f8ef;
       --yellow-bg:#fff3d7;
       --red-bg:#ffeded;
+      --blue-bg:#eaf3ff;
       --gray-bg:#f2f5f9;
       --shadow:0 10px 24px rgba(20,34,60,.08);
     }
 
-    * { box-sizing:border-box; }
+    *{box-sizing:border-box}
 
-    body {
+    body{
       margin:0;
       font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
       background:linear-gradient(180deg,#eef5ff 0%,var(--bg) 260px);
       color:var(--text);
     }
 
-    .app {
-      width:min(1000px,100%);
+    .app{
+      width:min(1120px,100%);
       margin:auto;
       padding:12px;
-      padding-bottom:40px;
+      padding-bottom:50px;
     }
 
-    .header {
+    .header{
       position:sticky;
       top:0;
       z-index:10;
@@ -52,34 +54,77 @@
       margin-bottom:12px;
     }
 
-    h1 {
+    .top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    h1{
       margin:0;
       font-size:clamp(22px,5vw,32px);
       letter-spacing:-.035em;
+      line-height:1.08;
     }
 
-    .sub {
+    .sub{
       margin:6px 0 0;
       color:var(--muted);
       font-size:14px;
       line-height:1.35;
     }
 
-    .totals {
+    .top-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      border-radius:999px;
+      padding:10px 13px;
+      font-weight:900;
+      cursor:pointer;
+      min-height:42px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+      font:inherit;
+      white-space:nowrap;
+      text-decoration:none;
+    }
+
+    .btn:hover{background:#f8fbff}
+    .btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .btn.primary:hover{background:var(--blue-dark)}
+    .btn.good{background:var(--green);color:#fff;border-color:var(--green)}
+    .btn.red{background:var(--red);color:#fff;border-color:var(--red)}
+    .btn.small{min-height:34px;padding:7px 10px;font-size:12px}
+    .btn.full{width:100%}
+
+    .totals{
       display:grid;
       grid-template-columns:repeat(4,1fr);
       gap:8px;
       margin-top:12px;
     }
 
-    .total-box {
+    .total-box{
       border:1px solid var(--line);
       border-radius:14px;
       padding:10px;
       background:#fff;
+      min-width:0;
     }
 
-    .label {
+    .label{
       color:var(--muted);
       font-size:11px;
       font-weight:900;
@@ -87,7 +132,7 @@
       letter-spacing:.04em;
     }
 
-    .value {
+    .value{
       margin-top:3px;
       font-weight:950;
       font-size:clamp(16px,4vw,22px);
@@ -96,14 +141,14 @@
       text-overflow:ellipsis;
     }
 
-    .tools {
+    .tools{
       display:grid;
       grid-template-columns:1.3fr .7fr;
       gap:8px;
       margin-bottom:12px;
     }
 
-    input, select {
+    input,select,textarea{
       width:100%;
       min-height:44px;
       border:1px solid var(--line);
@@ -112,14 +157,22 @@
       background:#fff;
       font:inherit;
       outline:none;
+      color:var(--text);
     }
 
-    .list {
-      display:grid;
-      gap:10px;
+    textarea{
+      min-height:70px;
+      resize:vertical;
     }
 
-    .month {
+    input:focus,select:focus,textarea:focus{
+      border-color:rgba(0,120,255,.55);
+      box-shadow:0 0 0 4px rgba(0,120,255,.12);
+    }
+
+    .list{display:grid;gap:10px}
+
+    .month{
       background:var(--card);
       border:1px solid var(--line);
       border-radius:18px;
@@ -127,27 +180,24 @@
       overflow:hidden;
     }
 
-    .line {
+    .line{
       display:grid;
       align-items:center;
       border-bottom:1px solid var(--line);
     }
 
-    .line:last-child { border-bottom:0; }
+    .line:last-child{border-bottom:0}
 
-    .line1 {
+    .line1{
       grid-template-columns:1fr auto auto;
       gap:10px;
       padding:11px;
       background:#fff;
     }
 
-    .date {
-      font-weight:950;
-      font-size:17px;
-    }
+    .date{font-weight:950;font-size:17px}
 
-    .date small {
+    .date small{
       display:block;
       color:var(--muted);
       font-weight:700;
@@ -155,7 +205,7 @@
       margin-top:2px;
     }
 
-    .pill {
+    .pill{
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -167,25 +217,26 @@
       border:1px solid transparent;
     }
 
-    .ok { color:var(--green); background:var(--green-bg); border-color:#bde8cf; }
-    .parcial { color:var(--yellow); background:var(--yellow-bg); border-color:#f3d18a; }
-    .pendiente { color:var(--red); background:var(--red-bg); border-color:#ffc8c8; }
-    .neutro { color:#475467; background:var(--gray-bg); border-color:var(--line); }
+    .ok{color:var(--green);background:var(--green-bg);border-color:#bde8cf}
+    .parcial{color:var(--yellow);background:var(--yellow-bg);border-color:#f3d18a}
+    .pendiente{color:var(--red);background:var(--red-bg);border-color:#ffc8c8}
+    .neutro{color:#475467;background:var(--gray-bg);border-color:var(--line)}
+    .admin-pill{color:var(--blue);background:var(--blue-bg);border-color:#c9e1ff}
 
-    .line2 {
+    .line2{
       grid-template-columns:repeat(4,1fr);
       background:#fbfdff;
     }
 
-    .cell {
+    .cell{
       padding:10px;
       border-right:1px solid var(--line);
       min-width:0;
     }
 
-    .cell:last-child { border-right:0; }
+    .cell:last-child{border-right:0}
 
-    .concept {
+    .concept{
       font-weight:950;
       font-size:14px;
       margin-bottom:5px;
@@ -194,17 +245,15 @@
       text-overflow:ellipsis;
     }
 
-    .mini {
+    .mini{
       color:var(--muted);
       font-size:12px;
       line-height:1.35;
     }
 
-    .mini strong {
-      color:var(--text);
-    }
+    .mini strong{color:var(--text)}
 
-    .line3 {
+    .line3{
       grid-template-columns:1fr;
       padding:10px 11px;
       background:#fff;
@@ -213,36 +262,275 @@
       line-height:1.35;
     }
 
-    .empty-note {
-      color:var(--muted);
+    .empty-note{color:var(--muted)}
+
+    .admin-section{display:none}
+    body.admin-on .public-section{display:none}
+    body.admin-on .admin-section{display:block}
+
+    .admin-note{
+      margin:12px 0;
+      background:#fff;
+      border:1px solid var(--line);
+      border-left:5px solid var(--blue);
+      border-radius:16px;
+      padding:12px;
+      color:#344054;
+      line-height:1.38;
+      font-size:13px;
     }
 
-    .hidden {
+    .admin-bar{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .admin-bar .btn{flex:1}
+
+    .admin-grid{display:grid;gap:12px}
+
+    .panel{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      margin-bottom:12px;
+    }
+
+    .panel-head{
+      padding:12px;
+      border-bottom:1px solid var(--line);
+      background:#fbfdff;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .panel-title{
+      font-weight:950;
+      font-size:17px;
+    }
+
+    .panel-body{
+      padding:12px;
+      display:grid;
+      gap:10px;
+    }
+
+    .github-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr .7fr 1fr;
+      gap:8px;
+      align-items:end;
+    }
+
+    .admin-month{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .admin-month-head{
+      padding:12px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:#fbfdff;
+      flex-wrap:wrap;
+    }
+
+    .admin-month-title{font-weight:950;font-size:17px}
+
+    .admin-rows{
+      display:grid;
+      gap:10px;
+      padding:12px;
+    }
+
+    .admin-row{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:10px;
+      background:#fff;
+      display:grid;
+      gap:9px;
+    }
+
+    .admin-row-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .admin-row-title{font-weight:950}
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr .8fr .75fr .75fr .95fr 1fr;
+      gap:8px;
+      align-items:end;
+    }
+
+    .field label{
+      display:block;
+      font-size:11px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      font-weight:900;
+      margin:0 0 4px 3px;
+    }
+
+    .nota-field{grid-column:1 / -1}
+
+    .quick-actions{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+    }
+
+    .copybox{
+      width:100%;
+      min-height:130px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:12px;
       display:none;
+      margin-top:10px;
+    }
+
+    .modal-bg{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.48);
+      z-index:50;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+    }
+
+    .modal-bg.show{display:flex}
+
+    .modal{
+      width:min(470px,100%);
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:0 24px 80px rgba(0,0,0,.24);
+      border-radius:22px;
+      padding:16px;
+    }
+
+    .modal h2{
+      margin:0;
+      font-size:24px;
+      letter-spacing:-.03em;
+    }
+
+    .modal p{
+      margin:8px 0 14px;
+      color:var(--muted);
+      line-height:1.35;
+      font-size:14px;
+    }
+
+    .modal-actions{
+      display:flex;
+      gap:8px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .login-error{
+      display:none;
+      margin-top:10px;
+      border:1px solid #ffc8c8;
+      background:#ffeded;
+      color:#b42318;
+      border-radius:14px;
+      padding:10px;
+      font-size:13px;
+      line-height:1.35;
+    }
+
+    .login-error.show{display:block}
+
+    .checkline{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      color:#344054;
+      font-size:13px;
+      line-height:1.35;
+    }
+
+    .checkline input{
+      width:auto;
+      min-height:auto;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      background:#172033;
+      color:#fff;
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:13px;
+      opacity:0;
+      pointer-events:none;
+      transition:.2s ease;
+      z-index:999;
+      max-width:calc(100% - 20px);
+      text-align:center;
+    }
+
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+
+    @media(max-width:980px){
+      .form-grid{grid-template-columns:1fr 1fr}
+      .github-grid{grid-template-columns:1fr 1fr}
     }
 
     @media(max-width:720px){
-      .app { padding:9px; }
-      .totals { grid-template-columns:repeat(2,1fr); }
-      .tools { grid-template-columns:1fr; }
-      .line1 { grid-template-columns:1fr; }
-      .line2 { grid-template-columns:1fr 1fr; }
-      .cell:nth-child(2) { border-right:0; }
-      .cell:nth-child(1), .cell:nth-child(2) { border-bottom:1px solid var(--line); }
+      .app{padding:9px}
+      .totals{grid-template-columns:repeat(2,1fr)}
+      .tools{grid-template-columns:1fr}
+      .line1{grid-template-columns:1fr}
+      .line2{grid-template-columns:1fr 1fr}
+      .cell:nth-child(2){border-right:0}
+      .cell:nth-child(1),.cell:nth-child(2){border-bottom:1px solid var(--line)}
+      .top-actions{width:100%}
+      .top-actions .btn{flex:1}
+      .form-grid,.github-grid{grid-template-columns:1fr}
     }
 
     @media(max-width:420px){
-      .totals { grid-template-columns:1fr; }
-      .line2 { grid-template-columns:1fr; }
-      .cell { border-right:0!important; border-bottom:1px solid var(--line); }
-      .cell:last-child { border-bottom:0; }
+      .totals{grid-template-columns:1fr}
+      .line2{grid-template-columns:1fr}
+      .cell{border-right:0!important;border-bottom:1px solid var(--line)}
+      .cell:last-child{border-bottom:0}
     }
 
-    @media print {
-      body { background:#fff; }
-      .header,.tools { position:static; box-shadow:none; }
-      .tools { display:none; }
-      .month { box-shadow:none; break-inside:avoid; }
+    @media print{
+      body{background:#fff}
+      .header,.tools{position:static;box-shadow:none}
+      .tools,.admin-section,.top-actions{display:none!important}
+      .month{box-shadow:none;break-inside:avoid}
     }
   </style>
 </head>
@@ -250,15 +538,34 @@
 <body>
   <div class="app">
     <section class="header">
-      <h1>Lista de Pagos</h1>
-      <p class="sub">Vista simple de 3 líneas por mes: resumen, conceptos y transferencias/notas.</p>
+      <div class="top">
+        <div>
+          <h1 id="title">Lista de Pagos</h1>
+          <p class="sub" id="subtitle">Vista simple de 3 líneas por mes: resumen, conceptos y transferencias/notas.</p>
+        </div>
+        <div class="top-actions">
+          <button class="btn public-section" onclick="window.print()">🖨️ PDF</button>
+          <button class="btn primary" onclick="openAdminLogin()">🔐 Admin</button>
+          <button class="btn red admin-section" onclick="logoutAdmin()">Salir</button>
+        </div>
+      </div>
 
       <div class="totals" id="totals"></div>
+
+      <div class="admin-section">
+        <div class="admin-bar">
+          <button class="btn primary" onclick="saveAdmin()">💾 Guardar</button>
+          <button class="btn good" onclick="uploadToGitHub()">☁️ Subir a GitHub</button>
+          <button class="btn" onclick="downloadUpdatedHTML()">⬇️ Descargar HTML</button>
+          <button class="btn" onclick="copyData()">📋 Copiar datos</button>
+          <button class="btn" onclick="addRow()">➕ Agregar pago</button>
+        </div>
+      </div>
     </section>
 
-    <section class="tools">
-      <input id="search" type="search" placeholder="Buscar fecha, banco, nota o concepto..." oninput="render()" />
-      <select id="filter" onchange="render()">
+    <section class="tools public-section">
+      <input id="search" type="search" placeholder="Buscar fecha, banco, nota o concepto..." oninput="renderPublic()" />
+      <select id="filter" onchange="renderPublic()">
         <option value="todos">Todos</option>
         <option value="pendiente">Pendiente</option>
         <option value="parcial">Parcial</option>
@@ -266,94 +573,628 @@
       </select>
     </section>
 
-    <main class="list" id="list"></main>
+    <main class="list public-section" id="list"></main>
+
+    <section class="admin-section">
+      <div class="admin-note">
+        <strong>Flujo seguro práctico:</strong> primero KeyAuth desbloquea el panel; después metes tu token de GitHub solo en el admin.
+        El cliente no puede editar desde la vista normal. Si activas “dispositivo de confianza”, el token se guarda solo en ese navegador.
+      </div>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Configuración GitHub Pages</div>
+            <div class="mini">Usa un token con permiso de escritura en Contents del repositorio.</div>
+          </div>
+          <span class="pill admin-pill">☁️ GitHub</span>
+        </div>
+
+        <div class="panel-body">
+          <div class="github-grid">
+            <div class="field">
+              <label>Usuario / owner</label>
+              <input id="ghOwner" placeholder="tu_usuario">
+            </div>
+            <div class="field">
+              <label>Repositorio</label>
+              <input id="ghRepo" placeholder="mi-repositorio">
+            </div>
+            <div class="field">
+              <label>Rama</label>
+              <input id="ghBranch" placeholder="main" value="main">
+            </div>
+            <div class="field">
+              <label>Archivo</label>
+              <input id="ghPath" placeholder="index.html" value="index.html">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Token GitHub</label>
+            <input id="ghToken" type="password" placeholder="github_pat_...">
+          </div>
+
+          <label class="checkline">
+            <input id="trustDevice" type="checkbox">
+            Guardar token en este dispositivo de confianza
+          </label>
+
+          <div class="admin-bar" style="margin-top:0">
+            <button class="btn" onclick="saveGithubConfig()">Guardar configuración</button>
+            <button class="btn good" onclick="uploadToGitHub()">Subir cambios a GitHub Pages</button>
+            <button class="btn red" onclick="clearGithubToken()">Borrar token guardado</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="tools">
+        <input id="adminSearch" type="search" placeholder="Buscar en admin..." oninput="renderAdmin()" />
+        <select id="adminMonthFilter" onchange="renderAdmin()">
+          <option value="todos">Todos los meses</option>
+        </select>
+      </section>
+
+      <textarea id="copybox" class="copybox" readonly></textarea>
+      <main class="admin-grid" id="adminList"></main>
+    </section>
   </div>
+
+  <div class="modal-bg" id="loginModal">
+    <div class="modal">
+      <h2>Acceso Admin</h2>
+      <p>Ingresa una licencia KeyAuth válida para desbloquear la edición y luego usar el token de GitHub.</p>
+
+      <div class="field">
+        <label>License Key</label>
+        <input id="licenseInput" type="password" placeholder="Pega tu licencia KeyAuth" autocomplete="off" />
+      </div>
+
+      <div id="loginError" class="login-error"></div>
+
+      <div class="modal-actions">
+        <button class="btn" onclick="closeAdminLogin()">Cancelar</button>
+        <button class="btn primary" id="loginBtn" onclick="loginWithKeyAuth()">Entrar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Listo</div>
 
   <script>
     /*
     =========================================================
-    EDITA SOLO ESTA TABLA
+    CONFIGURACIÓN KEYAUTH
     =========================================================
 
-    Cada línea significa:
-    ["FECHA", "CONCEPTO", MONTO, "ESTADO", PAGADO, "FECHA PAGO", "BANCO", "NOTA"]
+    Cambia estos 3 datos:
+    appName: nombre exacto de tu app en KeyAuth
+    ownerId: Owner ID de KeyAuth
+    version: versión de tu app
 
-    ESTADO puede ser:
-    "pendiente", "parcial" o "pagado"
-
-    Ejemplo pago completo:
-    ["02/05/26", "Renta", 10000, "pagado", 10000, "05/05/26", "BAC", "Pago completo"],
-
-    Ejemplo pago parcial:
-    ["02/05/26", "Renta", 10000, "parcial", 4000, "05/05/26", "Capital One Checking mia", "Faltan L 6,000"],
-
-    Bancos:
-    Wells Fargo Rola
-    Capital One Checking mia
-    Capital One Savings mia
-    Banco Atlántida
-    BAC
-    Occidente
-    Banpaís
-    Ficohsa
+    No pongas secret en HTML público.
     */
 
-    const TABLA_EDITABLE = [
-      ["02/05/26", "Renta", 10000, "pagado", 0, "", "", ""],
-      ["02/05/26", "Comida", 5874, "pagado", 0, "", "", ""],
-      ["02/05/26", "Agua", 250, "pagado", 0, "", "", ""],
-      ["02/05/26", "Luz", 0, "pagado", 0, "", "", "Monto según recibo"],
-      ["02/06/26", "Renta", 10000, "pagado", 0, "", "", ""],
-      ["02/06/26", "Comida", 5874, "pagado", 0, "", "", ""],
-      ["02/06/26", "Agua", 250, "pagado", 0, "", "", ""],
-      ["02/06/26", "Luz", 0, "pendiente", 0, "", "", "Monto según recibo"],
-      ["02/07/26", "Renta", 10000, "pendiente", 0, "", "", ""],
-      ["02/07/26", "Comida", 5874, "pendiente", 0, "", "", ""],
-      ["02/07/26", "Agua", 250, "pendiente", 0, "", "", ""],
-      ["02/07/26", "Luz", 0, "pendiente", 0, "", "", "Monto según recibo"],
-      ["02/08/26", "Renta", 10000, "pendiente", 0, "", "", ""],
-      ["02/08/26", "Comida", 5874, "pendiente", 0, "", "", ""],
-      ["02/08/26", "Agua", 250, "pendiente", 0, "", "", ""],
-      ["02/08/26", "Luz", 0, "pendiente", 0, "", "", "Monto según recibo"],
-      ["02/09/26", "Renta", 10000, "pendiente", 0, "", "", ""],
-      ["02/09/26", "Comida", 5874, "pendiente", 0, "", "", ""],
-      ["02/09/26", "Agua", 250, "pendiente", 0, "", "", ""],
-      ["02/09/26", "Luz", 0, "pendiente", 0, "", "", "Monto según recibo"],
-      ["02/10/26", "Renta", 10000, "pendiente", 0, "", "", ""],
-      ["02/10/26", "Comida", 5874, "pendiente", 0, "", "", ""],
-      ["02/10/26", "Agua", 250, "pendiente", 0, "", "", ""],
-      ["02/10/26", "Luz", 0, "pendiente", 0, "", "", "Monto según recibo"],
-      ["02/11/26", "Renta", 10000, "pendiente", 0, "", "", ""],
-      ["02/11/26", "Comida", 5874, "pendiente", 0, "", "", ""],
-      ["02/11/26", "Agua", 250, "pendiente", 0, "", "", ""],
-      ["02/11/26", "Luz", 0, "pendiente", 0, "", "", "Monto según recibo"],
-      ["02/12/26", "Renta", 10000, "pendiente", 0, "", "", ""],
-      ["02/12/26", "Comida", 5874, "pendiente", 0, "", "", ""],
-      ["02/12/26", "Agua", 250, "pendiente", 0, "", "", ""],
-      ["02/12/26", "Luz", 0, "pendiente", 0, "", "", "Monto según recibo"],
-      ["02/01/27", "Renta", 10000, "pendiente", 0, "", "", ""],
-      ["02/01/27", "Comida", 5874, "pendiente", 0, "", "", ""],
-      ["02/01/27", "Agua", 250, "pendiente", 0, "", "", ""],
-      ["02/01/27", "Luz", 0, "pendiente", 0, "", "", "Monto según recibo"],
-      ["02/02/27", "Renta", 10000, "pendiente", 0, "", "", ""],
-      ["02/02/27", "Comida", 5874, "pendiente", 0, "", "", ""],
-      ["02/02/27", "Agua", 250, "pendiente", 0, "", "", ""],
-      ["02/02/27", "Luz", 0, "pendiente", 0, "", "", "Monto según recibo"],
-      ["02/03/27", "Renta", 10000, "pendiente", 0, "", "", ""],
-      ["02/03/27", "Comida", 5874, "pendiente", 0, "", "", ""],
-      ["02/03/27", "Agua", 250, "pendiente", 0, "", "", ""],
-      ["02/03/27", "Luz", 0, "pendiente", 0, "", "", "Monto según recibo"],
-      ["02/04/27", "Renta", 10000, "pendiente", 0, "", "", ""],
-      ["02/04/27", "Comida", 5874, "pendiente", 0, "", "", ""],
-      ["02/04/27", "Agua", 250, "pendiente", 0, "", "", ""],
-      ["02/04/27", "Luz", 0, "pendiente", 0, "", "", "Monto según recibo"],
-    ];
+    const KEYAUTH_CONFIG = {
+      appName: "PON_AQUI_APP_NAME",
+      ownerId: "PON_AQUI_OWNER_ID",
+      version: "1.0",
+      endpoint: "https://keyauth.win/api/1.3/"
+    };
 
     /*
     =========================================================
-    NO TOCAR DE AQUÍ PARA ABAJO
+    DATOS BASE
     =========================================================
+
+    Estructura:
+    ["FECHA", "CONCEPTO", MONTO, "ESTADO", PAGADO, "FECHA PAGO", "BANCO", "NOTA"]
+
+    Si estado = "pagado", no necesitas escribir el monto pagado.
+    El sistema toma pagado = monto automáticamente.
     */
+
+    const DATOS_BASE = /*DATA_START*/[
+  [
+    "02/05/26",
+    "Renta",
+    10000,
+    "pagado",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/05/26",
+    "Comida",
+    5874,
+    "pagado",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/05/26",
+    "Agua",
+    250,
+    "pagado",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/05/26",
+    "Luz",
+    0,
+    "pagado",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ],
+  [
+    "02/06/26",
+    "Renta",
+    10000,
+    "pagado",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/06/26",
+    "Comida",
+    5874,
+    "pagado",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/06/26",
+    "Agua",
+    250,
+    "pagado",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/06/26",
+    "Luz",
+    0,
+    "pendiente",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ],
+  [
+    "02/07/26",
+    "Renta",
+    10000,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/07/26",
+    "Comida",
+    5874,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/07/26",
+    "Agua",
+    250,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/07/26",
+    "Luz",
+    0,
+    "pendiente",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ],
+  [
+    "02/08/26",
+    "Renta",
+    10000,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/08/26",
+    "Comida",
+    5874,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/08/26",
+    "Agua",
+    250,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/08/26",
+    "Luz",
+    0,
+    "pendiente",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ],
+  [
+    "02/09/26",
+    "Renta",
+    10000,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/09/26",
+    "Comida",
+    5874,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/09/26",
+    "Agua",
+    250,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/09/26",
+    "Luz",
+    0,
+    "pendiente",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ],
+  [
+    "02/10/26",
+    "Renta",
+    10000,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/10/26",
+    "Comida",
+    5874,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/10/26",
+    "Agua",
+    250,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/10/26",
+    "Luz",
+    0,
+    "pendiente",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ],
+  [
+    "02/11/26",
+    "Renta",
+    10000,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/11/26",
+    "Comida",
+    5874,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/11/26",
+    "Agua",
+    250,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/11/26",
+    "Luz",
+    0,
+    "pendiente",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ],
+  [
+    "02/12/26",
+    "Renta",
+    10000,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/12/26",
+    "Comida",
+    5874,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/12/26",
+    "Agua",
+    250,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/12/26",
+    "Luz",
+    0,
+    "pendiente",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ],
+  [
+    "02/01/27",
+    "Renta",
+    10000,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/01/27",
+    "Comida",
+    5874,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/01/27",
+    "Agua",
+    250,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/01/27",
+    "Luz",
+    0,
+    "pendiente",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ],
+  [
+    "02/02/27",
+    "Renta",
+    10000,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/02/27",
+    "Comida",
+    5874,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/02/27",
+    "Agua",
+    250,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/02/27",
+    "Luz",
+    0,
+    "pendiente",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ],
+  [
+    "02/03/27",
+    "Renta",
+    10000,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/03/27",
+    "Comida",
+    5874,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/03/27",
+    "Agua",
+    250,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/03/27",
+    "Luz",
+    0,
+    "pendiente",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ],
+  [
+    "02/04/27",
+    "Renta",
+    10000,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/04/27",
+    "Comida",
+    5874,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/04/27",
+    "Agua",
+    250,
+    "pendiente",
+    0,
+    "",
+    "",
+    ""
+  ],
+  [
+    "02/04/27",
+    "Luz",
+    0,
+    "pendiente",
+    0,
+    "",
+    "",
+    "Monto según recibo"
+  ]
+]/*DATA_END*/;
+
+    const BANCOS = [
+      "",
+      "Wells Fargo Rola",
+      "Capital One Checking mia",
+      "Capital One Savings mia",
+      "Banco Atlántida",
+      "BAC",
+      "Occidente",
+      "Banpaís",
+      "Ficohsa"
+    ];
+
+    const STORAGE_KEY = "lista_pagos_datos_v3";
+    const ADMIN_SESSION_KEY = "lista_pagos_admin_ok_v3";
+    const GITHUB_CONFIG_KEY = "lista_pagos_github_config_v3";
+    const GITHUB_TOKEN_KEY = "lista_pagos_github_token_v3";
+
+    let datos = loadData();
 
     const moneyFmt = new Intl.NumberFormat("es-HN", {
       minimumFractionDigits:2,
@@ -366,6 +1207,26 @@
       month:"long",
       year:"numeric"
     });
+
+    function loadData(){
+      try{
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if(saved) return JSON.parse(saved);
+      }catch(e){}
+      return JSON.parse(JSON.stringify(DATOS_BASE));
+    }
+
+    function saveData(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+    }
+
+    function toast(msg){
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => el.classList.remove("show"), 1900);
+    }
 
     function money(n){
       return "L " + moneyFmt.format(Number(n || 0));
@@ -381,14 +1242,18 @@
     }
 
     function parseDate(fecha){
-      const [d,m,y] = fecha.split("/").map(Number);
+      const [d,m,y] = String(fecha || "01/01/26").split("/").map(Number);
       const yyyy = y < 70 ? 2000 + y : 1900 + y;
-      return new Date(yyyy, m - 1, d, 12, 0, 0);
+      return new Date(yyyy, (m || 1) - 1, d || 1, 12, 0, 0);
     }
 
     function longDate(fecha){
-      const t = dateFmt.format(parseDate(fecha));
-      return t.charAt(0).toUpperCase() + t.slice(1);
+      try{
+        const t = dateFmt.format(parseDate(fecha));
+        return t.charAt(0).toUpperCase() + t.slice(1);
+      }catch(e){
+        return fecha;
+      }
     }
 
     function cleanStatus(status){
@@ -396,29 +1261,34 @@
       return ["pagado","parcial","pendiente"].includes(s) ? s : "pendiente";
     }
 
-    function itemObj(row){
+    function itemObj(row, index){
       const [fecha, concepto, monto, estado, pagado, fechaPago, banco, nota] = row;
       let st = cleanStatus(estado);
       const total = Number(monto || 0);
-      const paid = Number(pagado || 0);
-      if(total > 0 && paid >= total) st = "pagado";
-      if(total > 0 && paid > 0 && paid < total && st !== "pagado") st = "parcial";
+      let paid = Number(pagado || 0);
+
+      if(st === "pagado") paid = total;
+      if(st === "pendiente") paid = 0;
+      if(st === "parcial" && paid >= total && total > 0) st = "pagado";
+      if(st === "parcial" && paid <= 0) st = "pendiente";
+
       return {
-        fecha,
-        concepto,
-        monto: total,
-        estado: st,
-        pagado: paid,
-        faltante: Math.max(0, total - paid),
-        fechaPago,
-        banco,
-        nota
+        index,
+        fecha:String(fecha || ""),
+        concepto:String(concepto || ""),
+        monto:total,
+        estado:st,
+        pagado:paid,
+        faltante:Math.max(0, total - paid),
+        fechaPago:String(fechaPago || ""),
+        banco:String(banco || ""),
+        nota:String(nota || "")
       };
     }
 
-    function groupByMonth(){
+    function groupByMonth(sourceRows = datos){
       const map = new Map();
-      TABLA_EDITABLE.map(itemObj).forEach(item => {
+      sourceRows.map((row,i) => itemObj(row,i)).forEach(item => {
         if(!map.has(item.fecha)) map.set(item.fecha, []);
         map.get(item.fecha).push(item);
       });
@@ -449,6 +1319,16 @@
       }, {total:0,pagado:0,faltante:0,pendientes:0,parciales:0});
     }
 
+    function renderTotals(months){
+      const t = globalTotals(months);
+      document.getElementById("totals").innerHTML = `
+        <div class="total-box"><div class="label">Total</div><div class="value">${money(t.total)}</div></div>
+        <div class="total-box"><div class="label">Pagado</div><div class="value">${money(t.pagado)}</div></div>
+        <div class="total-box"><div class="label">Faltante</div><div class="value">${money(t.faltante)}</div></div>
+        <div class="total-box"><div class="label">Pend./parcial</div><div class="value">${t.pendientes + t.parciales}</div></div>
+      `;
+    }
+
     function statusPill(status){
       if(status === "pagado") return `<span class="pill ok">✅ Pagado</span>`;
       if(status === "parcial") return `<span class="pill parcial">🟡 Parcial</span>`;
@@ -459,16 +1339,6 @@
       if(t.total > 0 && t.faltante <= 0) return `<span class="pill ok">✅ Mes pagado</span>`;
       if(t.pagado > 0) return `<span class="pill parcial">🟡 Mes parcial</span>`;
       return `<span class="pill pendiente">🔴 Mes pendiente</span>`;
-    }
-
-    function renderTotals(months){
-      const t = globalTotals(months);
-      document.getElementById("totals").innerHTML = `
-        <div class="total-box"><div class="label">Total</div><div class="value">${money(t.total)}</div></div>
-        <div class="total-box"><div class="label">Pagado</div><div class="value">${money(t.pagado)}</div></div>
-        <div class="total-box"><div class="label">Faltante</div><div class="value">${money(t.faltante)}</div></div>
-        <div class="total-box"><div class="label">Pend./parcial</div><div class="value">${t.pendientes + t.parciales}</div></div>
-      `;
     }
 
     function transferText(items){
@@ -512,11 +1382,9 @@
             ${monthStatus(t)}
             <span class="pill neutro">Falta ${money(t.faltante)}</span>
           </div>
-
           <div class="line line2">
             ${month.items.map(conceptCell).join("")}
           </div>
-
           <div class="line line3">
             <strong>Transferencias / notas:</strong> ${transferText(month.items)}
           </div>
@@ -524,7 +1392,7 @@
       `;
     }
 
-    function passesFilters(month){
+    function passesPublicFilters(month){
       const q = document.getElementById("search").value.trim().toLowerCase();
       const f = document.getElementById("filter").value;
 
@@ -532,27 +1400,516 @@
       if(!q) return true;
 
       const text = [
-        month.fecha,
-        longDate(month.fecha),
-        ...month.items.flatMap(i => [
-          i.concepto, i.monto, i.estado, i.pagado, i.fechaPago, i.banco, i.nota
-        ])
+        month.fecha, longDate(month.fecha),
+        ...month.items.flatMap(i => [i.concepto,i.monto,i.estado,i.pagado,i.fechaPago,i.banco,i.nota])
       ].join(" ").toLowerCase();
 
       return text.includes(q);
     }
 
-    function render(){
+    function renderPublic(){
       const allMonths = groupByMonth();
       renderTotals(allMonths);
 
-      const months = allMonths.filter(passesFilters);
+      const months = allMonths.filter(passesPublicFilters);
       document.getElementById("list").innerHTML = months.length
         ? months.map(monthCard).join("")
         : `<div class="month"><div class="line line3">No hay resultados con esos filtros.</div></div>`;
     }
 
-    render();
+    function keyauthConfigured(){
+      return KEYAUTH_CONFIG.appName &&
+             KEYAUTH_CONFIG.ownerId &&
+             !KEYAUTH_CONFIG.appName.includes("PON_AQUI") &&
+             !KEYAUTH_CONFIG.ownerId.includes("PON_AQUI");
+    }
+
+    function getBrowserId(){
+      let id = localStorage.getItem("keyauth_browser_id");
+      if(!id){
+        const raw = `${Date.now()}-${Math.random()}-${navigator.userAgent}`;
+        id = btoa(unescape(encodeURIComponent(raw))).replace(/[^a-zA-Z0-9]/g,"").slice(0,32);
+        localStorage.setItem("keyauth_browser_id", id);
+      }
+      return id;
+    }
+
+    async function keyauthRequest(params){
+      const url = KEYAUTH_CONFIG.endpoint + "?" + new URLSearchParams(params).toString();
+      const res = await fetch(url, { method:"GET", cache:"no-store" });
+      if(!res.ok) throw new Error("No se pudo conectar con KeyAuth.");
+      return await res.json();
+    }
+
+    async function keyauthInit(){
+      const init = await keyauthRequest({
+        type:"init",
+        ver:KEYAUTH_CONFIG.version,
+        name:KEYAUTH_CONFIG.appName,
+        ownerid:KEYAUTH_CONFIG.ownerId
+      });
+
+      if(!init.success) throw new Error(init.message || "No se pudo iniciar KeyAuth.");
+      if(!init.sessionid) throw new Error("KeyAuth no devolvió sessionid.");
+      return init.sessionid;
+    }
+
+    async function loginWithKeyAuth(){
+      const error = document.getElementById("loginError");
+      const btn = document.getElementById("loginBtn");
+      error.classList.remove("show");
+      error.textContent = "";
+
+      if(!keyauthConfigured()){
+        error.textContent = "Falta configurar appName y ownerId dentro del HTML.";
+        error.classList.add("show");
+        return;
+      }
+
+      const key = document.getElementById("licenseInput").value.trim();
+      if(!key){
+        error.textContent = "Escribe la licencia KeyAuth.";
+        error.classList.add("show");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Verificando...";
+
+      try{
+        const sessionid = await keyauthInit();
+        const login = await keyauthRequest({
+          type:"license",
+          key:key,
+          sessionid:sessionid,
+          name:KEYAUTH_CONFIG.appName,
+          ownerid:KEYAUTH_CONFIG.ownerId,
+          hwid:getBrowserId()
+        });
+
+        if(!login.success) throw new Error(login.message || "Licencia no válida.");
+
+        sessionStorage.setItem(ADMIN_SESSION_KEY, "1");
+        closeAdminLogin();
+        unlockAdmin();
+        toast("Admin desbloqueado");
+      }catch(err){
+        error.textContent = err.message || "No se pudo validar la licencia.";
+        error.classList.add("show");
+      }finally{
+        btn.disabled = false;
+        btn.textContent = "Entrar";
+      }
+    }
+
+    function openAdminLogin(){
+      if(sessionStorage.getItem(ADMIN_SESSION_KEY) === "1"){
+        unlockAdmin();
+        return;
+      }
+      document.getElementById("loginModal").classList.add("show");
+      document.getElementById("licenseInput").value = "";
+      document.getElementById("loginError").classList.remove("show");
+      setTimeout(() => document.getElementById("licenseInput").focus(), 50);
+    }
+
+    function closeAdminLogin(){
+      document.getElementById("loginModal").classList.remove("show");
+    }
+
+    function unlockAdmin(){
+      document.body.classList.add("admin-on");
+      document.getElementById("title").textContent = "Panel Admin de Pagos";
+      document.getElementById("subtitle").textContent = "Edita pagos, valida con KeyAuth y sube cambios con token GitHub.";
+      loadGithubConfig();
+      fillAdminMonthFilter();
+      renderAdmin();
+    }
+
+    function logoutAdmin(){
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+      document.body.classList.remove("admin-on");
+      document.getElementById("title").textContent = "Lista de Pagos";
+      document.getElementById("subtitle").textContent = "Vista simple de 3 líneas por mes: resumen, conceptos y transferencias/notas.";
+      renderPublic();
+      toast("Admin cerrado");
+    }
+
+    document.getElementById("loginModal").addEventListener("click", e => {
+      if(e.target.id === "loginModal") closeAdminLogin();
+    });
+
+    document.getElementById("licenseInput").addEventListener("keydown", e => {
+      if(e.key === "Enter") loginWithKeyAuth();
+    });
+
+    function normalizeRowsForSave(){
+      datos = datos.map(row => {
+        const item = itemObj(row);
+        let paidForStorage = Number(row[4] || 0);
+        if(item.estado === "pagado") paidForStorage = item.monto;
+        if(item.estado === "pendiente") paidForStorage = 0;
+        return [item.fecha,item.concepto,item.monto,item.estado,paidForStorage,item.fechaPago,item.banco,item.nota];
+      });
+    }
+
+    function saveAdmin(){
+      normalizeRowsForSave();
+      saveData();
+      renderAdmin();
+      renderPublic();
+      toast("Guardado en este navegador");
+    }
+
+    function fillAdminMonthFilter(){
+      const select = document.getElementById("adminMonthFilter");
+      const current = select.value || "todos";
+      const months = [...new Set(datos.map(r => r[0]))];
+
+      select.innerHTML = `<option value="todos">Todos los meses</option>`;
+      months.forEach(fecha => {
+        const opt = document.createElement("option");
+        opt.value = fecha;
+        opt.textContent = `${fecha} — ${longDate(fecha)}`;
+        select.appendChild(opt);
+      });
+
+      select.value = months.includes(current) ? current : "todos";
+    }
+
+    function bankOptions(selected){
+      return BANCOS.map(b => `<option value="${esc(b)}" ${b === selected ? "selected" : ""}>${esc(b || "Sin banco")}</option>`).join("");
+    }
+
+    function renderAdmin(){
+      const q = document.getElementById("adminSearch").value.trim().toLowerCase();
+      const selectedMonth = document.getElementById("adminMonthFilter").value;
+
+      const groups = groupByMonth()
+        .filter(m => selectedMonth === "todos" || m.fecha === selectedMonth)
+        .map(m => ({
+          ...m,
+          items:m.items.filter(i => {
+            if(!q) return true;
+            return [i.fecha,longDate(i.fecha),i.concepto,i.monto,i.estado,i.pagado,i.fechaPago,i.banco,i.nota]
+              .join(" ").toLowerCase().includes(q);
+          })
+        }))
+        .filter(m => m.items.length);
+
+      renderTotals(groupByMonth());
+
+      document.getElementById("adminList").innerHTML = groups.length
+        ? groups.map(adminMonthCard).join("")
+        : `<div class="admin-month"><div class="line3">No hay resultados.</div></div>`;
+    }
+
+    function adminMonthCard(month){
+      const t = monthTotals(month.items);
+      return `
+        <section class="admin-month">
+          <div class="admin-month-head">
+            <div>
+              <div class="admin-month-title">${esc(month.fecha)}</div>
+              <div class="mini">${longDate(month.fecha)}</div>
+            </div>
+            <div class="quick-actions">
+              ${monthStatus(t)}
+              <span class="pill neutro">Falta ${money(t.faltante)}</span>
+            </div>
+          </div>
+          <div class="admin-rows">
+            ${month.items.map(adminRow).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function adminRow(i){
+      return `
+        <article class="admin-row">
+          <div class="admin-row-head">
+            <div class="admin-row-title">${esc(i.concepto)} · ${esc(i.fecha)}</div>
+            <div class="quick-actions">
+              ${statusPill(i.estado)}
+              <button class="btn small good" onclick="markPaid(${i.index})">Pagado</button>
+              <button class="btn small" onclick="markPartial(${i.index})">Parcial</button>
+              <button class="btn small red" onclick="markPending(${i.index})">Pendiente</button>
+              <button class="btn small red" onclick="deleteRow(${i.index})">Eliminar</button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label>Fecha</label>
+              <input value="${esc(i.fecha)}" onchange="updateCell(${i.index},0,this.value)">
+            </div>
+            <div class="field">
+              <label>Concepto</label>
+              <input value="${esc(i.concepto)}" onchange="updateCell(${i.index},1,this.value)">
+            </div>
+            <div class="field">
+              <label>Monto</label>
+              <input type="number" step="0.01" value="${esc(i.monto)}" onchange="updateCell(${i.index},2,this.value)">
+            </div>
+            <div class="field">
+              <label>Estado</label>
+              <select onchange="updateCell(${i.index},3,this.value)">
+                <option value="pendiente" ${i.estado==="pendiente" ? "selected" : ""}>Pendiente</option>
+                <option value="parcial" ${i.estado==="parcial" ? "selected" : ""}>Parcial</option>
+                <option value="pagado" ${i.estado==="pagado" ? "selected" : ""}>Pagado</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Pagado</label>
+              <input type="number" step="0.01" value="${esc(i.pagado)}" onchange="updateCell(${i.index},4,this.value)">
+            </div>
+            <div class="field">
+              <label>Fecha pago</label>
+              <input value="${esc(i.fechaPago)}" placeholder="05/05/26" onchange="updateCell(${i.index},5,this.value)">
+            </div>
+            <div class="field">
+              <label>Banco</label>
+              <select onchange="updateCell(${i.index},6,this.value)">
+                ${bankOptions(i.banco)}
+              </select>
+            </div>
+            <div class="field nota-field">
+              <label>Nota</label>
+              <textarea onchange="updateCell(${i.index},7,this.value)" placeholder="Ejemplo: pago parcial, faltan L 6,000">${esc(i.nota)}</textarea>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function updateCell(index,col,value){
+      if(!datos[index]) return;
+      if(col === 2 || col === 4) value = Number(value || 0);
+      datos[index][col] = value;
+
+      if(col === 3 && value === "pagado") datos[index][4] = Number(datos[index][2] || 0);
+      if(col === 3 && value === "pendiente") datos[index][4] = 0;
+
+      saveData();
+      renderAdmin();
+      renderPublic();
+    }
+
+    function markPaid(index){
+      if(!datos[index]) return;
+      datos[index][3] = "pagado";
+      datos[index][4] = Number(datos[index][2] || 0);
+      saveAdmin();
+    }
+
+    function markPartial(index){
+      if(!datos[index]) return;
+      datos[index][3] = "parcial";
+      if(Number(datos[index][4] || 0) <= 0) datos[index][4] = 1;
+      saveAdmin();
+    }
+
+    function markPending(index){
+      if(!datos[index]) return;
+      datos[index][3] = "pendiente";
+      datos[index][4] = 0;
+      saveAdmin();
+    }
+
+    function deleteRow(index){
+      if(!confirm("¿Eliminar este pago?")) return;
+      datos.splice(index,1);
+      saveAdmin();
+      fillAdminMonthFilter();
+    }
+
+    function addRow(){
+      datos.push(["02/05/26","Nuevo pago",0,"pendiente",0,"","",""]);
+      saveAdmin();
+      fillAdminMonthFilter();
+      toast("Pago agregado");
+    }
+
+    function copyData(){
+      normalizeRowsForSave();
+      const text = "const TABLA_EDITABLE = " + JSON.stringify(datos,null,2) + ";";
+      const box = document.getElementById("copybox");
+      box.style.display = "block";
+      box.value = text;
+      box.select();
+      navigator.clipboard?.writeText(text).then(() => toast("Datos copiados"));
+    }
+
+    function loadGithubConfig(){
+      let config = {};
+      try{ config = JSON.parse(localStorage.getItem(GITHUB_CONFIG_KEY) || "{}"); }catch(e){}
+
+      document.getElementById("ghOwner").value = config.owner || "";
+      document.getElementById("ghRepo").value = config.repo || "";
+      document.getElementById("ghBranch").value = config.branch || "main";
+      document.getElementById("ghPath").value = config.path || "index.html";
+
+      const token = localStorage.getItem(GITHUB_TOKEN_KEY) || "";
+      document.getElementById("ghToken").value = token;
+      document.getElementById("trustDevice").checked = !!token;
+    }
+
+    function getGithubConfig(){
+      return {
+        owner:document.getElementById("ghOwner").value.trim(),
+        repo:document.getElementById("ghRepo").value.trim(),
+        branch:document.getElementById("ghBranch").value.trim() || "main",
+        path:document.getElementById("ghPath").value.trim() || "index.html",
+        token:document.getElementById("ghToken").value.trim(),
+        trust:document.getElementById("trustDevice").checked
+      };
+    }
+
+    function saveGithubConfig(){
+      const cfg = getGithubConfig();
+      localStorage.setItem(GITHUB_CONFIG_KEY, JSON.stringify({
+        owner:cfg.owner,
+        repo:cfg.repo,
+        branch:cfg.branch,
+        path:cfg.path
+      }));
+
+      if(cfg.trust && cfg.token){
+        localStorage.setItem(GITHUB_TOKEN_KEY, cfg.token);
+      }else{
+        localStorage.removeItem(GITHUB_TOKEN_KEY);
+      }
+
+      toast("Configuración GitHub guardada");
+    }
+
+    function clearGithubToken(){
+      localStorage.removeItem(GITHUB_TOKEN_KEY);
+      document.getElementById("ghToken").value = "";
+      document.getElementById("trustDevice").checked = false;
+      toast("Token borrado de este navegador");
+    }
+
+    function pathForApi(path){
+      return String(path || "").split("/").map(encodeURIComponent).join("/");
+    }
+
+    async function githubRequest(url, token, options = {}){
+      const res = await fetch(url, {
+        ...options,
+        headers:{
+          "Accept":"application/vnd.github+json",
+          "Authorization":"Bearer " + token,
+          "X-GitHub-Api-Version":"2026-03-10",
+          ...(options.headers || {})
+        }
+      });
+
+      const text = await res.text();
+      let data = {};
+      try{ data = text ? JSON.parse(text) : {}; }catch(e){ data = {message:text}; }
+
+      if(!res.ok){
+        const msg = data.message || ("GitHub error " + res.status);
+        throw new Error(msg);
+      }
+
+      return data;
+    }
+
+    function toBase64Unicode(str){
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+
+    function buildUpdatedHTML(){
+      normalizeRowsForSave();
+      saveData();
+
+      const updatedData = JSON.stringify(datos,null,2);
+      let full = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+
+      const startMarker = "const DATOS_BASE = /*DATA_START*/";
+      const endMarker = "/*DATA_END*/;";
+
+      const start = full.indexOf(startMarker);
+      const end = full.indexOf(endMarker, start);
+
+      if(start === -1 || end === -1){
+        throw new Error("No se encontraron marcadores DATA_START/DATA_END.");
+      }
+
+      full = full.slice(0,start) + startMarker + updatedData + endMarker + full.slice(end + endMarker.length);
+      return full;
+    }
+
+    function downloadUpdatedHTML(){
+      const full = buildUpdatedHTML();
+      const blob = new Blob([full], {type:"text/html;charset=utf-8"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "lista_pagos_actualizado.html";
+      a.click();
+      URL.revokeObjectURL(a.href);
+      toast("HTML descargado");
+    }
+
+    async function uploadToGitHub(){
+      saveAdmin();
+      saveGithubConfig();
+
+      const cfg = getGithubConfig();
+      if(!cfg.owner || !cfg.repo || !cfg.path || !cfg.token){
+        alert("Falta owner, repositorio, archivo o token de GitHub.");
+        return;
+      }
+
+      const btns = document.querySelectorAll(".btn");
+      btns.forEach(b => b.disabled = true);
+
+      try{
+        const apiPath = pathForApi(cfg.path);
+        const baseUrl = `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${apiPath}`;
+        const metaUrl = `${baseUrl}?ref=${encodeURIComponent(cfg.branch)}`;
+
+        let sha = null;
+        try{
+          const meta = await githubRequest(metaUrl, cfg.token);
+          sha = meta.sha || null;
+        }catch(err){
+          if(!String(err.message).toLowerCase().includes("not found")){
+            throw err;
+          }
+        }
+
+        const full = buildUpdatedHTML();
+        const body = {
+          message:`Actualizar lista de pagos ${new Date().toLocaleString("es-HN")}`,
+          content:toBase64Unicode(full),
+          branch:cfg.branch
+        };
+
+        if(sha) body.sha = sha;
+
+        await githubRequest(baseUrl, cfg.token, {
+          method:"PUT",
+          body:JSON.stringify(body)
+        });
+
+        toast("Subido a GitHub correctamente");
+        alert("Listo. Cambios subidos a GitHub. GitHub Pages puede tardar unos segundos en reflejarse.");
+      }catch(err){
+        alert("No se pudo subir a GitHub: " + (err.message || err));
+      }finally{
+        btns.forEach(b => b.disabled = false);
+      }
+    }
+
+    if(sessionStorage.getItem(ADMIN_SESSION_KEY) === "1"){
+      unlockAdmin();
+    }else{
+      renderPublic();
+    }
   </script>
 </body>
 </html>
